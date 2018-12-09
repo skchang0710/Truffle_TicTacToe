@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TicTacToe on the Blockchain</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script src="./app.js"></script>
+</head>
+<body>
+  <h1>TicTacToe</h1>
+  <h2>Distributed TicTacToe on the Blockchain</h2>
+  <table id="board">
+	<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+  </table>
+  <br><br><button id="create" onclick="App.createNewGame()">Create Game</button>
+  <br><br><button id="join" onclick="App.joinGame()">Join Game</button>
+  <br><br><button onclick="App.useAccountOne()">Use Account #2</button>
+  <br><br>
+  <span id="status"></span>
+  <br>
+  <span class="hint"><strong>Hint:</strong> open the browser developer console to view any errors and warnings.</span>
+</body>
+</html>
