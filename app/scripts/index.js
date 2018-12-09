@@ -1,6 +1,7 @@
 import '../styles/app.css'
 import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
+import $ from 'jquery'
 import tictactoeArtifact from '../../build/contracts/TicTacToe.json'
 
 const TicTacToe = contract(tictactoeArtifact)
@@ -14,7 +15,7 @@ window.App = {
     const self = this
     TicTacToe.setProvider(web3.currentProvider)
 
-		//
+		// truffle bug - https://github.com/trufflesuite/truffle-contract/issues/57
 		if (typeof TicTacToe.currentProvider.sendAsync !== "function") {
 			TicTacToe.currentProvider.sendAsync = function() {
 				return TicTacToe.currentProvider.send.apply(
@@ -51,6 +52,13 @@ window.App = {
 			ticTacToe = instance;
 			console.log(ticTacToe);
 
+			// Set the On-Click Handler
+			for(var i = 0; i < 3; i++) {
+				for(var j = 0; j < 3; j++) {
+					$($('#board')[0].children[0].children[i].children[j]).off('click').click({x:i, y:j}, App.setStone);
+				}
+			}
+
 		}).catch(error => {
 			console.log(error);
 		});
@@ -73,6 +81,9 @@ window.App = {
 				console.log(error);
 			});
 		}
+	},
+	setStone: function(event) {
+		console.log(event);
 	}
 };
 
