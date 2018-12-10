@@ -99,6 +99,13 @@ window.App = {
 	printBoard: function() {
 		ticTacToe.getBoard.call().then(board => {
 			console.log(board);
+			for(var i = 0; i < board.length; i++) {
+				for(var j = 0; j < board[i].length; j++) {
+					let id = board[i][j];
+					let mark = (id == 0) ? '' : (id == account) ? 'X' : 'O';
+					$('#board')[0].children[0].children[i].children[j].innerHTML = mark;
+				}
+			}
 		});
 	}
 };
