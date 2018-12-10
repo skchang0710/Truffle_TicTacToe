@@ -77,9 +77,15 @@ window.App = {
 		}
 	},
 	setStone: function(event) {
-		console.log(event);
+		console.log(`setStone, {${event.data.x}, ${event.data.y}}`);
 		ticTacToe.setStone(event.data.x, event.data.y, {from: account}).then(txResult => {
-			console.log(txResult);
+			if (txResult.logs[0].event == 'NextPlayer') {
+				console.log('Next Player :', txResult.logs[0].args.player);
+			} else if (txResult.logs[0].event == 'GameOverWithWin') {
+				console.log('Winner :', txResult.logs[0].args.winner);
+				if (txResult.logs[1].event == 'PayoutSuccess') console.log('PayoutSuccess'); 
+			}
+			console.log('txResult :', txResult);
 		});
 	},
 	setOnClickHandler: function() {
