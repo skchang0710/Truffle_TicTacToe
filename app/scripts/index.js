@@ -53,7 +53,16 @@ window.App = {
 		TicTacToe.new({from: account, value: Wager, gas: 3000000}).then(instance => {
 			ticTacToe = instance;
 			console.log('contract address :', ticTacToe.address);
-			App.setOnClickHandler();
+
+			let playerJoinedEvent = ticTacToe.PlayerJoined();
+			playerJoinedEvent.watch((error, eventObj) => {
+				if (error) {
+					console.log(error);
+				} else {
+					console.log(eventObj);
+					App.setOnClickHandler();
+				}
+			});
 
 		}).catch(error => {
 			console.log(error);
