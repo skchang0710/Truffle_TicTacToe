@@ -86,6 +86,7 @@ window.App = {
 				if (txResult.logs[1].event == 'PayoutSuccess') console.log('PayoutSuccess'); 
 			}
 			console.log('txResult :', txResult);
+			App.printBoard();
 		});
 	},
 	setOnClickHandler: function() {
@@ -94,6 +95,11 @@ window.App = {
 				$($('#board')[0].children[0].children[i].children[j]).off('click').click({x:i, y:j}, App.setStone);
 			}
 		}
+	},
+	printBoard: function() {
+		ticTacToe.getBoard.call().then(board => {
+			console.log(board);
+		});
 	}
 };
 
