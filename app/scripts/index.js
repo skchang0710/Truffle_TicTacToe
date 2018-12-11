@@ -85,6 +85,15 @@ window.App = {
 			});
 		}
 	},
+	nextPlayer: function(error, eventObj) {
+		App.printBoard();
+		
+		if (eventObj.args.player == account) {
+			App.setOnClickHandler();
+		} else {
+			App.setOffClickHandler();
+		}
+	},
 	setStone: function(event) {
 		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
 		ticTacToe.setStone(event.data.x, event.data.y, {from: account}).then(txResult => {
@@ -102,6 +111,13 @@ window.App = {
 		for(var i = 0; i < 3; i++) {
 			for(var j = 0; j < 3; j++) {
 				$($('#board')[0].children[0].children[i].children[j]).off('click').click({x:i, y:j}, App.setStone);
+			}
+		}
+	},
+	setOffClickHandler: function() {
+		for(var i = 0; i < 3; i++) {
+			for(var j = 0; j < 3; j++) {
+				$($('#board')[0].children[0].children[i].children[j]).prop('onclick', null).off('click');
 			}
 		}
 	},
