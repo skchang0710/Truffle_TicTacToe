@@ -86,15 +86,15 @@ window.App = {
 		}
 	},
 	setStone: function(event) {
-		console.log(`setStone, {${event.data.x}, ${event.data.y}}`);
+		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
 		ticTacToe.setStone(event.data.x, event.data.y, {from: account}).then(txResult => {
+			console.log('txResult :', txResult);
 			if (txResult.logs[0].event == 'NextPlayer') {
 				console.log('Next Player :', txResult.logs[0].args.player);
 			} else if (txResult.logs[0].event == 'GameOverWithWin') {
 				console.log('Winner :', txResult.logs[0].args.winner);
 				if (txResult.logs[1].event == 'PayoutSuccess') console.log('PayoutSuccess'); 
 			}
-			console.log('txResult :', txResult);
 			App.printBoard();
 		});
 	},
@@ -110,7 +110,7 @@ window.App = {
 			console.log(board);
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
-					let id = board[i][j];
+					let id = web3.utils.toChecksumAddress(board[i][j]);
 					let mark = (id == 0) ? '' : (id == account) ? 'X' : 'O';
 					$('#board')[0].children[0].children[i].children[j].innerHTML = mark;
 				}
