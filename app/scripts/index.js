@@ -60,9 +60,12 @@ window.App = {
 					console.log(error);
 				} else {
 					console.log(eventObj);
-					App.setOnClickHandler();
+
 				}
 			});
+
+			let nextPlayerEvent = ticTacToe.NextPlayer();
+			nextPlayerEvent.watch(App.nextPlayer);
 
 		}).catch(error => {
 			console.log(error);
@@ -74,11 +77,14 @@ window.App = {
 		if(gameAddress != null) {
 			TicTacToe.at(gameAddress).then(instance => {
 				ticTacToe = instance;
+
+				let nextPlayerEvent = ticTacToe.NextPlayer();
+				nextPlayerEvent.watch(App.nextPlayer);
+
 				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
 
 			}).then(txResult => {
 				console.log('Next Player :', txResult.logs[1].args.player);
-				App.setOnClickHandler();
 
 			}).catch(error => {
 				console.log(error);
@@ -86,9 +92,11 @@ window.App = {
 		}
 	},
 	nextPlayer: function(error, eventObj) {
+		console.log('Next Player :', eventObj);
 		App.printBoard();
-		
-		if (eventObj.args.player == account) {
+
+		let player = web3.utils.toChecksumAddress(eventObj.args.player);
+		if (player == account) {
 			App.setOnClickHandler();
 		} else {
 			App.setOffClickHandler();
