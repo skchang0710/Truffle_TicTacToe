@@ -60,6 +60,7 @@ window.App = {
 
 			let playerJoinedEvent = ticTacToe.PlayerJoined();
 			playerJoinedEvent.watch((error, eventObj) => {
+				playerJoinedEvent.stopWatching();
 				if (error) {
 					console.log(error);
 				} else {
@@ -67,14 +68,7 @@ window.App = {
 				}
 			});
 
-			nextPlayerEvent = ticTacToe.NextPlayer();
-			nextPlayerEvent.watch(App.nextPlayer);
-
-			gameOverWithWinEvent = ticTacToe.GameOverWithWin();
-			gameOverWithWinEvent.watch(App.gameOver);
-
-			gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
-			gameOverWithDrawEvent.watch(App.gameOver);
+			App.listenToEvents();
 
 		}).catch(error => {
 			console.log(error);
@@ -87,14 +81,7 @@ window.App = {
 			TicTacToe.at(gameAddress).then(instance => {
 				ticTacToe = instance;
 
-				nextPlayerEvent = ticTacToe.NextPlayer();
-				nextPlayerEvent.watch(App.nextPlayer);
-
-				gameOverWithWinEvent = ticTacToe.GameOverWithWin();
-				gameOverWithWinEvent.watch(App.gameOver);
-
-				gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
-				gameOverWithDrawEvent.watch(App.gameOver);
+				App.listenToEvents();
 
 				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
 
@@ -105,6 +92,16 @@ window.App = {
 				console.log(error);
 			});
 		}
+	},
+	listenToEvents: function() {
+		nextPlayerEvent = ticTacToe.NextPlayer();
+		nextPlayerEvent.watch(App.nextPlayer);
+
+		gameOverWithWinEvent = ticTacToe.GameOverWithWin();
+		gameOverWithWinEvent.watch(App.gameOver);
+
+		gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
+		gameOverWithDrawEvent.watch(App.gameOver);
 	},
 	nextPlayer: function(error, eventObj) {
 		console.log('Next Player :', eventObj);
