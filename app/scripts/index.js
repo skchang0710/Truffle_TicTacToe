@@ -7,9 +7,13 @@ import tictactoeArtifact from '../../build/contracts/TicTacToe.json'
 const TicTacToe = contract(tictactoeArtifact);
 const Wager = Web3.utils.toWei('0.1', 'ether');
 
-let accounts
-let account
+let accounts;
+let account;
 let ticTacToe;
+
+let nextPlayerEvent;
+let gameOverWithWinEvent;
+let gameOverWithDrawEvent;
 
 window.App = {
 	start: function () {
@@ -63,13 +67,13 @@ window.App = {
 				}
 			});
 
-			let nextPlayerEvent = ticTacToe.NextPlayer();
+			nextPlayerEvent = ticTacToe.NextPlayer();
 			nextPlayerEvent.watch(App.nextPlayer);
 
-			let gameOverWithWinEvent = ticTacToe.GameOverWithWin();
+			gameOverWithWinEvent = ticTacToe.GameOverWithWin();
 			gameOverWithWinEvent.watch(App.gameOver);
 
-			let gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
+			gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
 			gameOverWithDrawEvent.watch(App.gameOver);
 
 		}).catch(error => {
@@ -83,13 +87,13 @@ window.App = {
 			TicTacToe.at(gameAddress).then(instance => {
 				ticTacToe = instance;
 
-				let nextPlayerEvent = ticTacToe.NextPlayer();
+				nextPlayerEvent = ticTacToe.NextPlayer();
 				nextPlayerEvent.watch(App.nextPlayer);
 
-				let gameOverWithWinEvent = ticTacToe.GameOverWithWin();
+				gameOverWithWinEvent = ticTacToe.GameOverWithWin();
 				gameOverWithWinEvent.watch(App.gameOver);
 
-				let gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
+				gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
 				gameOverWithDrawEvent.watch(App.gameOver);
 
 				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
