@@ -58,15 +58,15 @@ window.App = {
 			ticTacToe = instance;
 			console.log('contract address :', ticTacToe.address);
 
-			let playerJoinedEvent = ticTacToe.PlayerJoined();
-			playerJoinedEvent.watch((error, eventObj) => {
-				playerJoinedEvent.stopWatching();
-				if (error) {
-					console.log(error);
-				} else {
-					console.log(eventObj);
-				}
-			});
+			// let playerJoinedEvent = ticTacToe.PlayerJoined();
+			// playerJoinedEvent.watch((error, eventObj) => {
+			// 	playerJoinedEvent.stopWatching();
+			// 	if (error) {
+			// 		console.log(error);
+			// 	} else {
+			// 		console.log(eventObj);
+			// 	}
+			// });
 
 			App.listenToEvents();
 
