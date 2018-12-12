@@ -125,6 +125,12 @@ window.App = {
 		} else {
 			alert("That's a draw !!");
 		}
+
+		for(var i = 0; i < 3; i++) {
+			for(var j = 0; j < 3; j++) {
+				$('#board')[0].children[0].children[i].children[j].innerHTML = '';
+			}
+		}
 	},
 	setStone: function(event) {
 		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
