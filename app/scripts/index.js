@@ -117,7 +117,8 @@ window.App = {
 	gameOver: function(error, eventObj) {
 		console.log('Game Over', eventObj);
 		if (eventObj.event == 'GameOverWithWin') {
-			if (eventObj.args.winner == account) {
+		  let winner = web3.utils.toChecksumAddress(eventObj.args.winner);
+			if (winner == account) {
 				alert('Congratulations, You Won!');
 			} else {
 				alert('Woops, you lost! Try again...');
