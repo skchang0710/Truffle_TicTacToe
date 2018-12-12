@@ -60,12 +60,17 @@ window.App = {
 					console.log(error);
 				} else {
 					console.log(eventObj);
-
 				}
 			});
 
 			let nextPlayerEvent = ticTacToe.NextPlayer();
 			nextPlayerEvent.watch(App.nextPlayer);
+
+			let gameOverWithWinEvent = ticTacToe.GameOverWithWin();
+			gameOverWithWinEvent.watch(App.gameOver);
+
+			let gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
+			gameOverWithDrawEvent.watch(App.gameOver);
 
 		}).catch(error => {
 			console.log(error);
@@ -80,6 +85,12 @@ window.App = {
 
 				let nextPlayerEvent = ticTacToe.NextPlayer();
 				nextPlayerEvent.watch(App.nextPlayer);
+
+				let gameOverWithWinEvent = ticTacToe.GameOverWithWin();
+				gameOverWithWinEvent.watch(App.gameOver);
+
+				let gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
+				gameOverWithDrawEvent.watch(App.gameOver);
 
 				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
 
@@ -102,6 +113,18 @@ window.App = {
 			App.setOffClickHandler();
 		}
 	},
+	gameOver: function(error, eventObj) {
+		console.log('Game Over', eventObj);
+		if (eventObj.event == 'GameOverWithWin') {
+			if (eventObj.args.winner == account) {
+				alert('Congratulations, You Won!');
+			} else {
+				alert('Woops, you lost! Try again...');
+			}
+		} else {
+			alert("That's a draw !!");
+		}
+	},
 	setStone: function(event) {
 		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
 		ticTacToe.setStone(event.data.x, event.data.y, {from: account}).then(txResult => {
@@ -118,7 +141,8 @@ window.App = {
 	setOnClickHandler: function() {
 		for(var i = 0; i < 3; i++) {
 			for(var j = 0; j < 3; j++) {
-				$($('#board')[0].children[0].children[i].children[j]).off('click').click({x:i, y:j}, App.setStone);
+				if ($('#board')[0].children[0].children[i].children[j].innerHTML == '')
+					$($('#board')[0].children[0].children[i].children[j]).off('click').click({x:i, y:j}, App.setStone);
 			}
 		}
 	},
