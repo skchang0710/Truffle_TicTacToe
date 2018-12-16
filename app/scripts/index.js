@@ -154,8 +154,12 @@ window.App = {
 				$('#board')[0].children[0].children[i].children[j].innerHTML = '';
 			}
 		}
-		$("#your-turn").hide();
-		$("#waiting").show();
+
+		$(".in-game").hide();
+		$(".waiting-for-join").hide();
+		$(".game-start").show();
+		$("#game-address").text('');
+		$("#waiting").hide();
 	},
 	setStone: function(event) {
 		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
