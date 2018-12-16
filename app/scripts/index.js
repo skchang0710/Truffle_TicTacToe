@@ -82,31 +82,26 @@ window.App = {
 			console.log(error);
 		});
 	},
-	joinGame: function() {
-		console.log('Join Game Called :', account);
-		let gameAddress = prompt('Address of the Game');
-		if(gameAddress != null) {
-			TicTacToe.at(gameAddress).then(instance => {
-				ticTacToe = instance;
-
+	joinGame: async function() {
+		try {
+			console.log('Join Game Called :', account);
+			let gameAddress = prompt('Address of the Game');
+			if(gameAddress != null) {
+				ticTacToe = await TicTacToe.at(gameAddress);
 				App.listenToEvents();
 
-				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
-
-			}).then(txResult => {
+				let txResult = await ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
+				console.log(txResult);
 
 				$(".in-game").show();
 				$(".game-start").hide();
 				$("#game-address").text(ticTacToe.address);
 				$("#your-turn").hide();
-				ticTacToe.player1.call().then(player1Address => {
-					$("#opponent-address").text(player1Address);
-				});
-				console.log(txResult);
-
-			}).catch(error => {
-				console.log(error);
-			});
+				let player1Address = await ticTacToe.player1.call();
+				$("#opponent-address").text(player1Address);
+			}
+		} catch (error) {
+			console.log(error);
 		}
 	},
 	listenToEvents: function() {
