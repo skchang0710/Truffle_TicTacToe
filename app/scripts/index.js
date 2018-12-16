@@ -56,17 +56,25 @@ window.App = {
 		console.log('Create Game Called, address :', account);
 		TicTacToe.new({from: account, value: Wager, gas: 3000000}).then(instance => {
 			ticTacToe = instance;
-			console.log('contract address :', ticTacToe.address);
 
-			// let playerJoinedEvent = ticTacToe.PlayerJoined();
-			// playerJoinedEvent.watch((error, eventObj) => {
-			// 	playerJoinedEvent.stopWatching();
-			// 	if (error) {
-			// 		console.log(error);
-			// 	} else {
-			// 		console.log(eventObj);
-			// 	}
-			// });
+			$(".in-game").show();
+			$(".waiting-for-join").hide();
+			$(".game-start").hide();
+			$("#game-address").text(ticTacToe.address);
+			$("#waiting").show();
+
+			let playerJoinedEvent = ticTacToe.PlayerJoined();
+			playerJoinedEvent.watch((error, eventObj) => {
+				$(".waiting-for-join").show();
+				$("#opponent-address").text(eventObj.args.player);
+				$("#your-turn").hide();
+				// playerJoinedEvent.stopWatching();
+				if (error) {
+					console.log(error);
+				} else {
+					console.log(eventObj);
+				}
+			});
 
 			App.listenToEvents();
 
@@ -86,7 +94,15 @@ window.App = {
 				return ticTacToe.joinGame({from: account,value: Wager,gas: 3000000});
 
 			}).then(txResult => {
-				console.log('Next Player :', txResult.logs[1].args.player);
+
+				$(".in-game").show();
+				$(".game-start").hide();
+				$("#game-address").text(ticTacToe.address);
+				$("#your-turn").hide();
+				ticTacToe.player1.call().then(player1Address => {
+					$("#opponent-address").text(player1Address);
+				});
+				console.log(txResult);
 
 			}).catch(error => {
 				console.log(error);
@@ -103,15 +119,18 @@ window.App = {
 		gameOverWithDrawEvent = ticTacToe.GameOverWithDraw();
 		gameOverWithDrawEvent.watch(App.gameOver);
 	},
-	nextPlayer: function(error, eventObj) {
+	nextPlayer: async function(error, eventObj) {
 		console.log('Next Player :', eventObj);
-		App.printBoard();
+		await App.printBoard();
 
 		let player = web3.utils.toChecksumAddress(eventObj.args.player);
 		if (player == account) {
 			App.setOnClickHandler();
+			$("#your-turn").show();
+			$("#waiting").hide();
 		} else {
-			App.setOffClickHandler();
+			$("#your-turn").hide();
+			$("#waiting").show();
 		}
 	},
 	gameOver: function(error, eventObj) {
@@ -140,9 +159,14 @@ window.App = {
 				$('#board')[0].children[0].children[i].children[j].innerHTML = '';
 			}
 		}
+		$("#your-turn").hide();
+		$("#waiting").show();
 	},
 	setStone: function(event) {
 		console.log(`setStone : {${event.data.x}, ${event.data.y}}`);
+		// todo: stone placeHolder 
+		App.setOffClickHandler();
+
 		ticTacToe.setStone(event.data.x, event.data.y, {from: account}).then(txResult => {
 			console.log('txResult :', txResult);
 			if (txResult.logs[0].event == 'NextPlayer') {
@@ -152,6 +176,8 @@ window.App = {
 				if (txResult.logs[1].event == 'PayoutSuccess') console.log('PayoutSuccess'); 
 			}
 			App.printBoard();
+		}).catch(error => {
+			console.log(error);
 		});
 	},
 	setOnClickHandler: function() {
@@ -169,17 +195,16 @@ window.App = {
 			}
 		}
 	},
-	printBoard: function() {
-		ticTacToe.getBoard.call().then(board => {
-			console.log(board);
-			for(var i = 0; i < board.length; i++) {
-				for(var j = 0; j < board[i].length; j++) {
-					let id = web3.utils.toChecksumAddress(board[i][j]);
-					let mark = (id == 0) ? '' : (id == account) ? 'X' : 'O';
-					$('#board')[0].children[0].children[i].children[j].innerHTML = mark;
-				}
+	printBoard: async function() {
+		const board = await ticTacToe.getBoard.call();
+		console.log(board);
+		for(var i = 0; i < board.length; i++) {
+			for(var j = 0; j < board[i].length; j++) {
+				let id = web3.utils.toChecksumAddress(board[i][j]);
+				let mark = (id == 0) ? '' : (id == account) ? 'X' : 'O';
+				$('#board')[0].children[0].children[i].children[j].innerHTML = mark;
 			}
-		});
+		}
 	}
 };
 
