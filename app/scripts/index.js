@@ -127,14 +127,13 @@ window.App = {
 			alert("That's a draw !!");
 		}
 
-		console.log(nextPlayerEvent.stopWatching);
-		try {
-			nextPlayerEvent.stopWatching();
-			gameOverWithWinEvent.stopWatching();
-			gameOverWithDrawEvent.stopWatching();
-		} catch (error) {
-			console.log(error);
-		}
+		//	try {
+		//		nextPlayerEvent.stopWatching();
+		//		gameOverWithWinEvent.stopWatching();
+		//		gameOverWithDrawEvent.stopWatching();
+		//	} catch (error) {
+		//		console.log(error);
+		//	}
 
 		for(var i = 0; i < 3; i++) {
 			for(var j = 0; j < 3; j++) {
